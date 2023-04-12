@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
 /**
  * Created with Intellij IDEA
@@ -78,5 +79,33 @@ public class EmployeeController {
         // 1. 从session中移除员工id
         request.getSession().removeAttribute("employee");
         return R.success("登出成功");
+    }
+
+    /**
+     * 新增员工
+     * @param employee 前端传来的员工信息
+     * @return 新增成功返回成功信息，失败返回错误信息
+     */
+    @PostMapping
+    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("新增员工: {}", employee.toString());
+
+        // 设置初始密码，123456，需要进行md5加密
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+
+        // 设置创建时间和更新时间
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        // 获取当前登录用户id
+        Long empId = (Long) request.getSession().getAttribute("employee");
+        // 设置创建人和更新人
+        employee.setCreateUser(empId);
+        employee.setUpdateUser(empId);
+
+        // 需要对保存操作进行异常捕获，有可能因为重复账号而导致保存失败
+        employeeService.save(employee);
+
+        return R.success("新增员工成功");
     }
 }
