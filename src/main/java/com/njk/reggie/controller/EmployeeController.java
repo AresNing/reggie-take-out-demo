@@ -134,4 +134,25 @@ public class EmployeeController {
 
         return R.success(pageInfo);
     }
+
+    /**
+     * 修改员工信息
+     * @param request 通过request获取session
+     * @param employee 前端传来的员工信息
+     * @return 修改成功返回成功信息，失败返回错误信息
+     */
+    @PutMapping
+    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("employee: {}", employee);
+
+        // 获取当前登录用户id
+        Long empId = (Long) request.getSession().getAttribute("employee");
+
+        // 设置更新时间和更新人
+        employee.setUpdateUser(empId);
+        employee.setUpdateTime(LocalDateTime.now());
+
+        employeeService.updateById(employee);
+        return R.success("修改成功");
+    }
 }
