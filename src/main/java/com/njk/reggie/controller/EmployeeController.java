@@ -93,14 +93,14 @@ public class EmployeeController {
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
         // 设置创建时间和更新时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        //employee.setCreateTime(LocalDateTime.now());
+        //employee.setUpdateTime(LocalDateTime.now());
 
         // 获取当前登录用户id
-        Long empId = (Long) request.getSession().getAttribute("employee");
+        //Long empId = (Long) request.getSession().getAttribute("employee");
         // 设置创建人和更新人
-        employee.setCreateUser(empId);
-        employee.setUpdateUser(empId);
+        //employee.setCreateUser(empId);
+        //employee.setUpdateUser(empId);
 
         // 需要对保存操作进行异常捕获，有可能因为重复账号而导致保存失败
         employeeService.save(employee);
@@ -146,11 +146,11 @@ public class EmployeeController {
         log.info("employee: {}", employee);
 
         // 获取当前登录用户id
-        Long empId = (Long) request.getSession().getAttribute("employee");
+        //Long empId = (Long) request.getSession().getAttribute("employee");
 
         // 设置更新时间和更新人
-        employee.setUpdateUser(empId);
-        employee.setUpdateTime(LocalDateTime.now());
+        //employee.setUpdateUser(empId);
+        //employee.setUpdateTime(LocalDateTime.now());
 
         employeeService.updateById(employee);
         return R.success("修改成功");
