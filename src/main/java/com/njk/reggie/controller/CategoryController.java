@@ -62,4 +62,19 @@ public class CategoryController {
         return R.success(pageInfo);
 
     }
+
+    /**
+     * 删除指定分类信息
+     * @param ids 分类信息id
+     * @return 删除结果
+     */
+    @DeleteMapping
+    public R<String> deleteById(Long ids) {
+        log.info("删除分类，id为：{}", ids);
+
+//        categoryService.removeById(ids);
+        categoryService.remove(ids);
+
+        return R.success("删除分类成功");
+    }
 }

@@ -37,4 +37,14 @@ public class GlobalExceptionHandler {
 
         return R.error("未知错误");
     }
+
+    /**
+     * 自定义异常处理方法
+     * @return 返回异常信息
+     */
+    @ExceptionHandler(CustomException.class) // 指定拦截的异常
+    public R<String> exceptionHandler(CustomException e) {
+        log.error(e.getMessage());
+        return R.error(e.getMessage());
+    }
 }

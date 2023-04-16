@@ -1,17 +1,16 @@
 package com.njk.reggie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.njk.reggie.entity.Category;
+import com.njk.reggie.entity.Dish;
 
 /**
  * Created with Intellij IDEA
  * <h3>reggie_take_out_demo<h3>
  *
  * @author : AresNing
- * @date : 2023-04-15 23:35
+ * @date : 2023-04-16 10:46
  * @description :
  */
 
-public interface CategoryService extends IService<Category> {
-    void remove(Long id);
+public interface DishService extends IService<Dish> {
 }
