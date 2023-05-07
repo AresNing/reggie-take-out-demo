@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created with Intellij IDEA
  * <h3>reggie_take_out_demo<h3>
@@ -88,5 +90,24 @@ public class CategoryController {
         log.info("修改分类，该分类为：{}", category);
         categoryService.updateById(category);
         return R.success("修改分类成功");
+    }
+
+    /**
+     * 根据条件查询分类数据
+     * @param category
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Category>> list(Category category) {
+        // 构造条件构造器
+        LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
+        // 根据Type显示
+        wrapper.eq(category.getType() != null, Category::getType, category.getType());
+        // 根据sort升序，更改时间降序
+        wrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        // 执行查询
+        List<Category> categoryList = categoryService.list(wrapper);
+
+        return R.success(categoryList);
     }
 }
