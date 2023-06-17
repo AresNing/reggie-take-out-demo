@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.njk.reggie.dto.DishDto;
 import com.njk.reggie.dto.SetmealDto;
 import com.njk.reggie.entity.Setmeal;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * Created with Intellij IDEA
@@ -33,4 +36,17 @@ public interface SetmealService extends IService<Setmeal> {
      * @param setmealDto
      */
     public void updateWithDish(SetmealDto setmealDto);
+
+    /**
+     * 删除套餐，同时删除套餐和菜品的关联数据
+     * @param ids
+     */
+    public void removeWithDish(List<Long> ids);
+
+    /**
+     * 起售/停售套餐
+     * @param status
+     * @param ids
+     */
+    public void updateStatusByIds(int status, List<Long> ids);
 }
