@@ -1,6 +1,7 @@
 package com.njk.reggie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.njk.reggie.dto.DishDto;
 import com.njk.reggie.dto.SetmealDto;
 import com.njk.reggie.entity.Setmeal;
 
@@ -19,4 +20,17 @@ public interface SetmealService extends IService<Setmeal> {
      * @param setmealDto
      */
     public void saveWithDish(SetmealDto setmealDto);
+
+    /**
+     * 根据id查询套餐信息及其菜品信息
+     * @param id
+     * @return
+     */
+    public SetmealDto getByIdWithDish(Long id);
+
+    /**
+     * 更新套餐信息，同时更新对应的菜品信息
+     * @param setmealDto
+     */
+    public void updateWithDish(SetmealDto setmealDto);
 }

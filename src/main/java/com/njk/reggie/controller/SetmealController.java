@@ -90,4 +90,26 @@ public class SetmealController {
         return R.success(dtoPage);
     }
 
+    /**
+     * 根据id查询套餐信息及其菜品信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<SetmealDto> get(@PathVariable Long id) {
+        SetmealDto setmealDto = setmealService.getByIdWithDish(id);
+        return R.success(setmealDto);
+    }
+
+    /**
+     * 修改套餐
+     * @param setmealDto
+     * @return
+     */
+    @PutMapping
+    public R<String> update(@RequestBody SetmealDto setmealDto) {
+        log.info(setmealDto.toString());
+        setmealService.updateWithDish(setmealDto);
+        return R.success("修改套餐成功");
+    }
 }
