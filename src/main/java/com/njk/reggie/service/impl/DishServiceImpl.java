@@ -2,9 +2,12 @@ package com.njk.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.njk.reggie.common.CustomException;
 import com.njk.reggie.dto.DishDto;
 import com.njk.reggie.entity.Dish;
 import com.njk.reggie.entity.DishFlavor;
+import com.njk.reggie.entity.Setmeal;
+import com.njk.reggie.entity.SetmealDish;
 import com.njk.reggie.mapper.DishMapper;
 import com.njk.reggie.service.DishFlavorService;
 import com.njk.reggie.service.DishService;
@@ -93,5 +96,44 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         }).collect(Collectors.toList());
 
         dishFlavorService.saveBatch(flavors);
+    }
+
+    @Override
+    public void updateStatusByIds(int status, List<Long> ids) {
+        // 更新dish
+        // update dish set status = status where id in (1, 2, 3);
+        List<Dish> dishes = this.listByIds(ids);
+        dishes = dishes.stream().map(dish -> {
+            dish.setStatus(status);
+            return dish;
+        }).collect(Collectors.toList());
+        this.updateBatchById(dishes);
+    }
+
+    /**
+     * 删除菜品，同时需要删除菜品和口味的关联数据
+     * @param ids
+     */
+    @Transactional
+    public void removeWithFlavor(List<Long> ids) {
+        // 查询菜品状态，确定是否可以删除
+        // select count(*) from dish where id in (1, 2, 3) and status = 1;
+        LambdaQueryWrapper<Dish> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Dish::getId, ids);
+        wrapper.eq(Dish::getStatus, 1);
+        int count = this.count(wrapper);
+        if(count > 0) {
+            // 如果不能删除，抛出业务异常
+            throw new CustomException("菜品正在售卖中，不可以删除");
+        }
+
+        // 如果可以删除，先删除套餐表中的数据 -- dish
+        this.removeByIds(ids);
+
+        // 删除关系表中的数据 -- dish_flavor
+        // delete from dish_flavor where dish_id in (1, 2, 3);
+        LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(DishFlavor::getDishId, ids);
+        dishFlavorService.remove(lambdaQueryWrapper);
     }
 }

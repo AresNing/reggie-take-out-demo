@@ -144,4 +144,31 @@ public class DishController {
 
         return R.success(dishes);
     }
+
+    /**
+     * 起售/停售菜品
+     * @param status
+     * @param ids
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public R<String> updateStatus(@PathVariable int status, @RequestParam List<Long> ids) {
+        log.info("status:{}", status);
+        String statusStr = status == 1 ? "起售" : "停售";
+        log.info("dish:{}", ids);
+        dishService.updateStatusByIds(status, ids);
+        return R.success("菜品成功" + statusStr);
+    }
+
+    /**
+     * 删除菜品
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R<String> delete(@RequestParam List<Long> ids) {
+        log.info("dish:{}", ids);
+        dishService.removeWithFlavor(ids);
+        return R.success("菜品数据删除成功");
+    }
 }
